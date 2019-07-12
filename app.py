@@ -17,7 +17,7 @@ def hello():
 @app.route("/inventory")
 def inventory():
     inventory = {}
-    return render_template('inventory.html', )
+    return render_template('inventory.html')
 
 @app.route('/register')
 def my_form():
