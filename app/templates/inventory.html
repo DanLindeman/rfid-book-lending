@@ -1,6 +1,6 @@
 <h1>Your books</h1>
 <ul>
 {% for row in rows %}
-<li>{{ row }}</li>
+<li>{{ row.title, row.loaned_to }}</li>
 {% endfor %}
 </ul>
