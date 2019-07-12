@@ -1,0 +1,11 @@
+<h1>Scan your books</h1>
+<a href="/checkout">Done</a>
+<ul>
+{% for row in rows %}
+<li>{{ row }}</li>
+{% endfor %}
+</ul>
+<script>setTimeout(function() {
+  location.reload();
+}, 250);</script>
+
