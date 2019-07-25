@@ -66,8 +66,6 @@ def scanning():
     #             break
     #     finally:
     #         GPIO.cleanup()
-    scans.add(33)
-    scans.add(35)
     books = Book.query.filter(Book.rfid.in_(scans)).all()
     return render_template('stream.html', rows=books)
 
