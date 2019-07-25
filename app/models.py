@@ -7,4 +7,4 @@ class Book(db.Model):
     rfid = db.Column(db.Integer, index=True, unique=True)
 
     def __repr__(self):
-        return '<Book {}>'.format(self.title)
+        return '<Book {}, rfid {}, loaned to {}>'.format(self.title, self.rfid, self.loaned_to)

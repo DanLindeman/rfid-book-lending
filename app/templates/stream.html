@@ -1,8 +1,8 @@
 <h1>Scan your books</h1>
 <a href="/checkout">Done</a>
 <ul>
-{% for row in rows %}
-<li>{{ row }}</li>
+{% for book in rows %}
+<li>{{ book.title }}</li>
 {% endfor %}
 </ul>
 <script>setTimeout(function() {

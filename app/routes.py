@@ -4,14 +4,15 @@ import time
 
 # from mfrc522 import SimpleMFRC522
 from app import app, db
-from flask import Response, request, render_template
+from flask import Response, request, redirect, url_for, render_template
 
 from app.models import Book
 # reader = SimpleMFRC522()
 scans = set()
+cart = set()
 
 @app.route("/")
-def hello():
+def index():
     return render_template('index.html')
 
 @app.route("/inventory")
@@ -20,27 +21,38 @@ def inventory():
     return render_template('inventory.html', rows=books)
 
 @app.route('/register')
-def my_form():
+def register():
     return render_template('register.html')
 
 @app.route('/register', methods=['POST'])
 def register_post():
-    text = request.form['text']
+    form_title = request.form['title']
     # try:
-    #     rfid, title = reader.write(text)
+    #     rfid, title = reader.write(form_title)
     # finally:
     #     GPIO.cleanup()
     book = Book(rfid=rfid, title=title)
     db.session.add(book)
     db.session.commit()
-    return "Registered {title} to {rfid}".format(rfid=rfid, title=title)
+    return redirect(url_for('index'))
 
 @app.route("/checkout")
 def checkout():
-    global scans
-    checkout = scans
+    global scans, cart
+    cart = scans.copy()
+    books = Book.query.filter(Book.rfid.in_(cart)).all()
     scans = set()
-    return render_template('checkout.html', rows=checkout)
+    return render_template('checkout.html', rows=books)
+
+@app.route("/checkout", methods=['POST'])
+def checkout_post():
+    global cart
+    lendee = request.form['lendee']
+    books = Book.query.filter(Book.rfid.in_(cart)).all()
+    for book in books:
+        book.loaned_to = lendee
+        db.session.commit()
+    return redirect(url_for('index'))
 
 @app.route('/scanning')
 def scanning():
@@ -54,6 +66,9 @@ def scanning():
     #             break
     #     finally:
     #         GPIO.cleanup()
-    return render_template('stream.html', rows=scans)
+    scans.add(33)
+    scans.add(35)
+    books = Book.query.filter(Book.rfid.in_(scans)).all()
+    return render_template('stream.html', rows=books)
 
 
