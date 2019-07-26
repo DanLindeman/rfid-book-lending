@@ -2,10 +2,12 @@
 <a href="/checkout">Done</a>
 <ul>
 {% for book in rows %}
-<li>{{ book.title }}</li>
+  <li>{{ book.title }}</li>
 {% endfor %}
 </ul>
-<script>setTimeout(function() {
-  location.reload();
-}, 250);</script>
+<script>
+  setTimeout(function() {
+    location.reload();
+  }, 250);
+</script>
 <a href="/" >Home Screen</a>
