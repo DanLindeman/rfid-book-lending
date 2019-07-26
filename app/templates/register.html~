@@ -2,4 +2,4 @@
     <input name="title">
     <input type="submit">
 </form>
-<a href="/" >Home Screen</a>
+<a href="/index.html" >Home Screen</a>
