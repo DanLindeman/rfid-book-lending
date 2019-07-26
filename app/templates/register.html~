@@ -1,5 +1,0 @@
-<form method="POST">
-    <input name="title">
-    <input type="submit">
-</form>
-<a href="/index.html" >Home Screen</a>
