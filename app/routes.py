@@ -1,13 +1,13 @@
 import time
 
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
-# from mfrc522 import SimpleMFRC522
+from mfrc522 import SimpleMFRC522
 from app import app, db
 from flask import Response, request, redirect, url_for, render_template
 
 from app.models import Book
-# reader = SimpleMFRC522()
+reader = SimpleMFRC522()
 scans = set()
 cart = set()
 
@@ -20,6 +20,20 @@ def inventory():
     books = Book.query.all()
     return render_template('inventory.html', rows=books)
 
+@app.route("/inventory", methods=['POST'])
+def update_inventory():
+    if 'return' in request.form:
+        rfid = request.form['return']
+        book = Book.query.filter(Book.rfid == rfid).first()
+        book.loaned_to = None
+        db.session.commit()
+    elif 'delete' in request.form:
+        rfid = request.form['delete']
+        book = Book.query.filter(Book.rfid == rfid).first()
+        db.session.delete(book)
+        db.session.commit()
+    return redirect(url_for('inventory'))
+
 @app.route('/register')
 def register():
     return render_template('register.html')
@@ -27,10 +41,10 @@ def register():
 @app.route('/register', methods=['POST'])
 def register_post():
     form_title = request.form['title']
-    # try:
-    #     rfid, title = reader.write(form_title)
-    # finally:
-    #     GPIO.cleanup()
+    try:
+        rfid, title = reader.write(form_title)
+    finally:
+        GPIO.cleanup()
     book = Book(rfid=rfid, title=title)
     db.session.add(book)
     db.session.commit()
@@ -56,16 +70,16 @@ def checkout_post():
 
 @app.route('/scanning')
 def scanning():
-    # start = time.time()
-    # timeout = 1.0
-    # while time.time() < start + timeout:
-    #     try:
-    #         id, text = reader.read_no_block()
-    #         if (id and id not in scans):
-    #             scans.add(id)
-    #             break
-    #     finally:
-    #         GPIO.cleanup()
+    start = time.time()
+    timeout = 1.0
+    while time.time() < start + timeout:
+        try:
+            id, text = reader.read_no_block()
+            if (id and id not in scans):
+                scans.add(id)
+                break
+        finally:
+            GPIO.cleanup()
     books = Book.query.filter(Book.rfid.in_(scans)).all()
     return render_template('stream.html', rows=books)
 

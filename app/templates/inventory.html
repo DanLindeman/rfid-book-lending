@@ -2,5 +2,10 @@
 <ul>
 {% for row in rows %}
 <li>{{ "{}, {}, {}".format(row.rfid, row.title, row.loaned_to) }}</li>
+<form>
+    <button type="submit" name="return" value={{ row.rfid }} formmethod="post">Return</button>
+    <button type="submit" name="delete" value={{ row.rfid }} formmethod="post">Delete</button>
+</form>
 {% endfor %}
 </ul>
+<a href="/" >Home Screen</a>
