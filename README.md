@@ -4,7 +4,7 @@ Hey there! You probably found this repo from my [slide deck](https://slides.com/
 
 To run the application, you'll need:
 - A Raspberry Pi that has been setup according to [this blog](https://pimylifeup.com/raspberry-pi-rfid-rc522/)
-- 13.56 Mhz RFID tags
+- 13.56 MHz RFID tags
 
 
 ## Running local
